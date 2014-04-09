@@ -15,7 +15,7 @@ require_once("lib/class.cache.php");
 //create new instance of the class
 $cache = new Cache("tmp/");
 
-...
+//...
 ```
 
 ## Sample Call
@@ -27,8 +27,8 @@ if (!$clients_data = $cache->get($cache_key)) {
     //nope. Let's get the real one!
     $clients_data = json_decode(file_get_contents("clients.json"));
 
-    $expire = 3600; //1 hour
     //set the cache up!
+    $expire = 3600; //1 hour
     $cache->set($cache_key, $clients_data, $expire); 
 }
 
