@@ -13,8 +13,8 @@ if (!$clients_data = $cache->get($cache_key)) {
     //nope. Let's get the real one then!
     $clients_data = json_decode(file_get_contents("clients.json"));
 
-    $expire = 3600; //1 hour
     //set the cache up!
+    $expire = 3600; //1 hour
     $cache->set($cache_key, $clients_data, $expire); 
 }
 
