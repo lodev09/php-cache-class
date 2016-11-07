@@ -8,17 +8,17 @@
  * @license
  * The MIT License (MIT)
  * Copyright (c) 2014 Jovanni Lo
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -34,7 +34,7 @@
  * For security reasons, it's *strongly* recommended you set your cache directory to be outside
  * of your web root and on a drive independent of your operating system.
  *
- * Uses JSON, PHP native serialization and encryption/decryption 
+ * Uses JSON, PHP native serialization and encryption/decryption
  *
  * Sample usage:
  *
@@ -247,5 +247,41 @@ class Cache {
             '-'), trim($key));
         return $this->root.$safe_key.".cache";
     }
+
+    /**
+     * KJR 11/7/2016 - get file or url contents from given path
+     * @param string $uri The uri of the data we are fetching
+     * @param int $ttl The amount of time in seconds before cache should expire
+     * @returns the data or false on failure
+     */
+    public function file_get_contents($uri, $ttl = 3600) {
+        $cacheFile = md5($uri);
+        if (!$data = $this->get($cacheFile)) {
+            // cache did not exist
+            if ($data = @file_get_contents($uri)) {
+                //got the data, store it
+                if (!$this->set($cacheFile, $data, $ttl)) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * KJR 11/7/2016 - get data we know is stored as JSON and decode it
+     * @param string $uri The uri of the json data we are fetching
+     * @param int $ttl The amount of time in seconds before cache should expire
+     * @returns the data or false on failure
+     */
+    public function getJsonData($jsonUri, $ttl = 3600) {
+        if ($jsonData = $this->file_get_contents($jsonUri, $ttl)) {
+            //return decoded data
+            return json_decode($jsonData, true);
+        }
+        return false;
+    }
+
 }
-?>
