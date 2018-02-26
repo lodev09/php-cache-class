@@ -63,10 +63,16 @@ class Cache {
     protected $error = null;
 
     /**
-     * The encryption key. This is private! set this inside this class
+     * The encryption method. This is private! set this inside this class
      * @var string
      */
-    private $_encryption_key = "Fil3C@ch33ncryptionK3y";
+    private $_encryption_method = 'aes-256-cbc';
+
+    /**
+     * The encryption key.  Must be 32 characters. This is private! set this inside this class
+     * @var string
+     */
+    private $_encryption_key = 'Z7w@L!r8&1Tgl*KcfD^ViB@xaHYE!sQ@';
 
     /**
      * @param string $root The root of the file cache.
@@ -155,7 +161,7 @@ class Cache {
         if ($file_content) {
             $store = json_decode($file_content, true);
             if ($store['ttl'] < time()) {
-                unlink($key); // remove the file
+                @unlink($key); // remove the file
                 $this->error = "Data expired";
                 return false;
             } else return unserialize($store['data']);
@@ -209,10 +215,20 @@ class Cache {
      * @return string                   decrypted string
      */
     private function _encrypt($pure_string) {
-        $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
-        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-        $encrypted_string = mcrypt_encrypt(MCRYPT_BLOWFISH, $this->_encryption_key, utf8_encode($pure_string),
-            MCRYPT_MODE_ECB, $iv);
+        if (phpversion() < 7.1) {
+            $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
+            $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+            $encrypted_string = mcrypt_encrypt(MCRYPT_BLOWFISH, $this->_encryption_key, utf8_encode($pure_string), MCRYPT_MODE_ECB, $iv);
+        } else {
+            //found here: https://paragonie.com/blog/2015/05/if-you-re-typing-word-mcrypt-into-your-code-you-re-doing-it-wrong
+            if (mb_strlen($this->_encryption_key, '8bit') !== 32) {
+                throw new Exception("Needs a 256-bit key!");
+            }
+            $iv_size = openssl_cipher_iv_length($this->_encryption_method);
+            $iv = openssl_random_pseudo_bytes($iv_size);
+            $ciphertext = openssl_encrypt($pure_string, $this->_encryption_method, $this->_encryption_key, OPENSSL_RAW_DATA, $iv);
+            $encrypted_string = $iv.$ciphertext;
+        }
         return $encrypted_string;
     }
 
@@ -222,10 +238,21 @@ class Cache {
      * @return string                   decrypted string
      */
     private function _decrypt($encrypted_string) {
-        $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
-        $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-        $decrypted_string = mcrypt_decrypt(MCRYPT_BLOWFISH, $this->_encryption_key, $encrypted_string,
-            MCRYPT_MODE_ECB, $iv);
+        if (phpversion() < 7.1) {
+            $iv_size = mcrypt_get_iv_size(MCRYPT_BLOWFISH, MCRYPT_MODE_ECB);
+            $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+            $decrypted_string = mcrypt_decrypt(MCRYPT_BLOWFISH, $this->_encryption_key, $encrypted_string, MCRYPT_MODE_ECB, $iv);
+        } else {
+            //found here: https://paragonie.com/blog/2015/05/if-you-re-typing-word-mcrypt-into-your-code-you-re-doing-it-wrong
+            if (mb_strlen($this->_encryption_key, '8bit') !== 32) {
+                throw new Exception("Needs a 256-bit key!");
+            }
+            $iv_size = openssl_cipher_iv_length($this->_encryption_method);
+            $iv = mb_substr($encrypted_string, 0, $iv_size, '8bit');
+            $ciphertext = mb_substr($encrypted_string, $iv_size, null, '8bit');
+            
+            $decrypted_string = openssl_decrypt($ciphertext, $this->_encryption_method, $this->_encryption_key, OPENSSL_RAW_DATA, $iv);
+        }
         return $decrypted_string;
     }
 
