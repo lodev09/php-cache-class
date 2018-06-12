@@ -1,4 +1,4 @@
-PHP Cache Class (File base)
+PHP FileCache Class (File base)
 ============================
 A simple file based cache based from Erik Giberti's FileCache class. See [here](http://af-design.com/blog/2010/07/30/simple-file-based-caching-in-php/)
 
@@ -35,19 +35,19 @@ You may also edit composer.json manually then perform ```composer update```:
 require('vendor/autoload.php');
 
 //create new instance of the class
-use rothkj1022\Cache;
-$cache = new Cache\Cache("tmp/");
+use rothkj1022\FileCache;
+$cache = new FileCache\FileCache("tmp/");
 ```
 
 ### Example usage without composer
 
 ```php
 //require the class
-require_once("lib/Cache.php");
+require_once("lib/FileCache.php");
 
 //create new instance of the class
-use rothkj1022\Cache;
-$cache = new Cache\Cache("tmp/");
+use rothkj1022\FileCache;
+$cache = new FileCache\FileCache("tmp/");
 
 //...
 ```
@@ -95,6 +95,10 @@ Code reference for you to get started!
 See code to see all private methods used like `Cache::_encrypt($pure_string)` etc.
 
 ## Changelog
+
+### Version 2.1.1
+
+* Changed: Renamed class back to Erik Giberti's original name, FileCache
 
 ### Version 2.1.0
 

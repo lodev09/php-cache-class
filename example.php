@@ -1,11 +1,11 @@
 <?php
 
 //require the class
-require_once("lib/Cache.php");
+require_once("lib/FileCache.php");
 
 //create new instance of the class
-use rothkj1022\Cache;
-$cache = new Cache\Cache("tmp/");
+use rothkj1022\FileCache;
+$cache = new FileCache\FileCache("tmp/");
 
 $cache_key = "client_list";
 

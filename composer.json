@@ -22,7 +22,7 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"rothkj1022\\Cache\\": "lib"
+			"rothkj1022\\FileCache\\": "lib"
 		}
 	}
 }

@@ -1,8 +1,8 @@
 <?php
-namespace rothkj1022\Cache;
+namespace rothkj1022\FileCache;
 
 /**
- * @package Cache - A simple file based cache (based from Erik Giberti's FileCache class. http://af-design.com/blog/2010/07/30/simple-file-based-caching-in-php/)
+ * @package FileCache - A simple file based cache (based from Erik Giberti's FileCache class. http://af-design.com/blog/2010/07/30/simple-file-based-caching-in-php/)
  * @link http://www.lodev09.com
  * @author Erik Giberti
  * @author Jovanni Lo
@@ -51,7 +51,7 @@ namespace rothkj1022\Cache;
  *
  */
 
-class Cache {
+class FileCache {
 
     /**
      * Value is pre-pended to the cache, should be the full path to the directory
@@ -84,7 +84,7 @@ class Cache {
         $this->root = $root;
         // Requires the native JSON library
         if (!function_exists('json_decode') || !function_exists('json_encode')) {
-            throw new Exception('Cache needs the JSON PHP extensions.');
+            throw new Exception('FileCache needs the JSON PHP extensions.');
         }
     }
 
