@@ -1,10 +1,11 @@
 <?php
 
 //require the class
-require_once("lib/class.cache.php");
+require_once("lib/Cache.php");
 
 //create new instance of the class
-$cache = new Cache("tmp/");
+use rothkj1022\Cache;
+$cache = new Cache\Cache("tmp/");
 
 $cache_key = "client_list";
 
@@ -15,8 +16,7 @@ if (!$clients_data = $cache->get($cache_key)) {
 
     //set the cache up!
     $expire = 3600; //1 hour
-    $cache->set($cache_key, $clients_data, $expire); 
+    $cache->set($cache_key, $clients_data, $expire);
 }
 
 var_dump($clients_data);
-?>

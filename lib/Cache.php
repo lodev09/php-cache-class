@@ -1,9 +1,12 @@
 <?php
+namespace rothkj1022\Cache;
 
 /**
  * @package Cache - A simple file based cache (based from Erik Giberti's FileCache class. http://af-design.com/blog/2010/07/30/simple-file-based-caching-in-php/)
  * @link http://www.lodev09.com
+ * @author Erik Giberti
  * @author Jovanni Lo
+ * @author Kevin Roth
  * @copyright 2014 Jovanni Lo, all rights reserved
  * @license
  * The MIT License (MIT)
@@ -250,7 +253,7 @@ class Cache {
             $iv_size = openssl_cipher_iv_length($this->_encryption_method);
             $iv = mb_substr($encrypted_string, 0, $iv_size, '8bit');
             $ciphertext = mb_substr($encrypted_string, $iv_size, null, '8bit');
-            
+
             $decrypted_string = openssl_decrypt($ciphertext, $this->_encryption_method, $this->_encryption_key, OPENSSL_RAW_DATA, $iv);
         }
         return $decrypted_string;
