@@ -52,7 +52,7 @@ $cache = new FileCache\FileCache("tmp/");
 //...
 ```
 
-## Sample Call
+### Local file source example
 
 ```php
 $cache_key = "client_list";
@@ -68,6 +68,13 @@ if (!$clients_data = $cache->get($cache_key)) {
 }
 
 var_dump($clients_data);
+```
+
+### External http GET request example
+```php
+$uri = 'https://raw.githubusercontent.com/bahamas10/css-color-names/master/css-color-names.json';
+$remote_data = $cache->file_get_contents($uri);
+var_dump($remote_data);
 ```
 
 ## Reference
@@ -95,6 +102,10 @@ Code reference for you to get started!
 See code to see all private methods used like `Cache::_encrypt($pure_string)` etc.
 
 ## Changelog
+
+### Version 2.1.2
+
+* Integrated guzzle for more efficient http get requests
 
 ### Version 2.1.1
 
