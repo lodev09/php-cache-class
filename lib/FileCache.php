@@ -319,7 +319,7 @@ class FileCache {
 			$errorMsg = $exceptionType;
 			$request = $e->getRequest();
 			$requestMsg = \GuzzleHttp\Psr7\str($request);
-			echo 'Error getting content from: '.$uri.'. Request: '.$requestMsg;
+			//return 'Error getting content from: '.$uri.'. Request: '.$requestMsg;
 		}
 		return false;
 	}

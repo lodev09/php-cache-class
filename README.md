@@ -103,6 +103,10 @@ See code to see all private methods used like `Cache::_encrypt($pure_string)` et
 
 ## Changelog
 
+### Version 2.1.3
+
+* Fixed: Stopped echoing guzzle request errors to screen
+
 ### Version 2.1.2
 
 * Integrated guzzle for more efficient http get requests
